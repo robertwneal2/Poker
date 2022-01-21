@@ -1,5 +1,9 @@
 class Card
-    def initialize
 
+    attr_reader :val
+
+    def initialize(val)
+        @val = val
     end
+    
 end
