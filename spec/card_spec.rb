@@ -3,7 +3,7 @@ require 'card'
 
 describe Card do
 
-    subject(:card) { Card.new("j", "c")}
+    subject(:card) { Card.new("J", "C")}
 
     it "has a readable value and suit" do
         expect(card.val).to eq("j")
