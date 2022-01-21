@@ -30,89 +30,114 @@ class Hand
         add(indices.length)
     end
 
+    def hand_value?
+        if royal_flush? != false
+            val = "royal_flush"
+            tie = royal_flush?
+        elsif straight_flush? != false
+            val = "straight_flush"
+            tie = straight_flush?
+        elsif four_of_a_kind? != false
+            val = "four_of_a_kind"
+            tie = four_of_a_kind?
+        elsif full_house? != false
+            val = "full_house"
+            tie = full_house?
+        elsif flush? != false
+            val = "flush" 
+            tie = flush?
+        elsif straight? != false
+            val = "straight"
+            tie = straight?
+        elsif three_of_a_kind? != false
+            val = "three_of_a_kind"
+            tie = three_of_a_kind?
+        elsif two_pair? != false
+            val = "two pair"
+            tie = two_pair?
+        elsif pair? != false
+            val = "pair"
+            tie = pair?
+        else
+            val = "high_card"
+            tie = high_card
+        end
+        val_index = HAND_RANKS.index(val)
+        return [val_index, tie]
+    end
+
+    private
+
     def add(num)
         num.times do
             @cards << @deck.remove
         end
     end
 
-    def hand_value?
-        if royal_flush?
-            val = royal_flush?
-        elsif straight_flush?
-            val = royal_flush?
-        elsif four_of_a_kind?
-            val = four_of_a_kind?
-        elsif full_house?
-            val = full_house?
-        elsif flush?
-            val = flush?
-        elsif straight?
-            val = straight?
-        elsif three_of_a_kind?
-            three_of_a_kind?
-        elsif two_pair?
-            val = two_pair?
-        elsif pair?
-            val = pair?
-        else
-            val = "high_card"
-        end
-        val_index = HAND_RANKS.index(val)
-        return [high_card, val_index]
-    end
-
-    def high_card
-        val = 0
-        @cards.each do |card|
-            card_val = CARD_VALUES[card.val]
-            if card_val > val
-                val = card_val
-            end
-        end
-        val
-    end
-
     def royal_flush?
         if straight_flush? && high_card == 14
-            return "royal_flush"
+            return true
         end
         false
     end
 
     def straight_flush?
         if straight? && flush?
-            return "straight_flush"
+            return true
         end
         false
     end
 
     def four_of_a_kind?
-
+        false
     end
 
     def full_house?
-
+        false
     end
 
     def flush?
-
+        false
     end
 
     def straight?
-
+        false
     end
 
     def three_of_a_kind?
-
+        false
     end
 
     def two_pair?
-
+        false
     end
 
     def pair?
+        pair_val = 0
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        (0...values.length-1).each do |i1|
+            val1 = values[i1]
+            (i1+1..values.length-1).each do |i2|
+                val2 = values[i2]
+                if val1 == val2
+                    pair_val = val1
+                end
+            end
+        end
+        return false if pair_val == 0
+        values.reject! {|val| val == pair_val}
+        values.unshift(pair_val)
+        values
+    end
 
+    def high_card
+        tie = []
+        @cards.each do |card|
+            card_val = CARD_VALUES[card.val]
+            tie << card_val
+        end
+        tie.sort.reverse
     end
     
 end
