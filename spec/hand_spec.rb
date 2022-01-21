@@ -49,4 +49,47 @@ describe Hand do
 
     end
 
+    describe "#high_card" do
+        
+        it "returns value of highest card" do
+            hand.cards[0] = Card.new("2", "H")
+            hand.cards[1] = Card.new("3", "H")
+            hand.cards[2] = Card.new("4", "H")
+            hand.cards[3] = Card.new("5", "H")
+            hand.cards[4] = Card.new("9", "H")
+            expect(hand.high_card).to eq(9)
+        end
+
+    end
+
+    describe "#hand_value?" do
+
+        it "returns hand value in form of [high_card value, index of hand value]" do
+            hand.cards[0] = Card.new("2", "H")
+            hand.cards[1] = Card.new("3", "H")
+            hand.cards[2] = Card.new("4", "H")
+            hand.cards[3] = Card.new("5", "H")
+            hand.cards[4] = Card.new("9", "H")
+            expect(hand.hand_value?).to eq([9,0])
+        end
+
+    end
+
+    describe "#royal_flush?" do
+
+        it "returns 'royal_flush' if true" do
+
+        end
+
+        it "returns false if false" do
+            hand.cards[0] = Card.new("2", "H")
+            hand.cards[1] = Card.new("3", "H")
+            hand.cards[2] = Card.new("4", "H")
+            hand.cards[3] = Card.new("5", "H")
+            hand.cards[4] = Card.new("9", "H")
+            expect(hand.royal_flush?).to eq(false)
+        end
+
+    end
+
 end
