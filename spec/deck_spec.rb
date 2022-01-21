@@ -38,4 +38,15 @@ describe Deck do
         expect(shuffled_cards).to_not eq(unshuffled_cards)
     end
 
+    it "removing card removes a card from deck" do
+        deck.remove
+        expect(deck.cards.length).to eq(51)
+    end
+
+    it "removing card returns that card" do
+        card = deck.remove
+        expect(deck.cards.include?(card)).to eq(false)
+        expect(card.class).to eq(Card)
+    end
+
 end

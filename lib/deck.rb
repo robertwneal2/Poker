@@ -23,4 +23,8 @@ class Deck
         @cards = @cards.shuffle
     end
 
+    def remove
+        @cards.pop
+    end
+
 end
