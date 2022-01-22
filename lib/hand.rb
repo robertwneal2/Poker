@@ -14,6 +14,52 @@ class Hand
                    "10" => 10, "J" => 11, "Q" => 12,
                    "K" => 13, "A" => 14}
 
+    def self.compare_hands(hands) #array input
+        highest_rank = 0
+        highest_rank_hands = []
+        hands.each do |hand|
+            hand_value = hand.hand_value?[0]
+            if hand_value > highest_rank
+                highest_rank = hand_value
+                highest_rank_hands = [hand]
+            elsif hand_value == 
+                highest_rank = hand_value
+                highest_rank_hands << hand
+            end
+        end
+        return highest_rank_hands[0] if highest_rank_hands.length == 1
+        #tie
+        winning_hands = {}
+        highest_rank_hands.each { |hand| winning_hands[hand] = true}
+        tie_length = highest_rank_hands[0].hand_value?[1].length - 1
+        (0..tie_length).each do |i|
+            tie_val = 0
+            winning_hands.each do |hand, still_in| #find max tie value
+                if still_in == true
+                    hand_tie_val = hand.hand_value?[1][i]
+                    if hand_tie_val > tie_val
+                        tie_val = hand_tie_val
+                    end
+                end
+            end
+            winning_hands.each do |hand, still_in| 
+                if still_in == true
+                    hand_tie_val = hand.hand_value?[1][i]
+                    if hand_tie_val < tie_val
+                        winning_hands[hand] = false
+                    end
+                end
+            end
+        end
+        final_hands = []
+        winning_hands.each do |hand, still_in|
+            if still_in == true
+                final_hands << hand
+            end
+        end
+        final_hands
+    end
+
     attr_reader :cards, :deck
     def initialize(deck)
         @deck = deck
@@ -21,6 +67,16 @@ class Hand
         5.times do
             @cards << @deck.remove
         end
+    end
+
+    def inspect
+        values = []
+        @cards.each do |card|
+            val = card.val
+            suit = card.suit
+            values << [val, suit]
+        end
+        values
     end
 
     def remove(indices)

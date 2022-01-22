@@ -6,6 +6,8 @@ describe Hand do
 
     let(:deck) {Deck.new}
     subject(:hand) {Hand.new(deck)}
+    let(:hand2) {Hand.new(deck)}
+    let(:hand3) {Hand.new(deck)}
 
     describe "#initialize" do
 
@@ -144,21 +146,68 @@ describe Hand do
 
     end
 
-    # describe "#royal_flush?" do
+    describe "#compare_hands" do
 
-    #     it "returns 'royal_flush' if true" do
+        it "return winning hand if no draw with no rank tie" do
+            hand.cards[0] = Card.new("7", "H")
+            hand.cards[1] = Card.new("K", "S")
+            hand.cards[2] = Card.new("7", "H")
+            hand.cards[3] = Card.new("10", "C")
+            hand.cards[4] = Card.new("2", "H")
 
-    #     end
+            hand2.cards[0] = Card.new("5", "H")
+            hand2.cards[1] = Card.new("7", "S")
+            hand2.cards[2] = Card.new("8", "H")
+            hand2.cards[3] = Card.new("6", "C")
+            hand2.cards[4] = Card.new("9", "H")
 
-    #     it "returns false if false" do
-    #         hand.cards[0] = Card.new("2", "H")
-    #         hand.cards[1] = Card.new("3", "H")
-    #         hand.cards[2] = Card.new("4", "H")
-    #         hand.cards[3] = Card.new("5", "H")
-    #         hand.cards[4] = Card.new("9", "H")
-    #         expect(hand.royal_flush?).to eq(false)
-    #     end
+            # debugger
+            hands = [hand, hand2]
+            expect(Hand.compare_hands(hands)).to eq(hand2)
+        end
 
-    # end
+        it "return winning hand if no draw with rank tie" do
+            hand.cards[0] = Card.new("2", "S")
+            hand.cards[1] = Card.new("K", "S")
+            hand.cards[2] = Card.new("5", "S")
+            hand.cards[3] = Card.new("A", "S")
+            hand.cards[4] = Card.new("7", "S")
+
+            hand2.cards[0] = Card.new("2", "S")
+            hand2.cards[1] = Card.new("K", "S")
+            hand2.cards[2] = Card.new("6", "S")
+            hand2.cards[3] = Card.new("A", "S")
+            hand2.cards[4] = Card.new("7", "S")
+
+            hands = [hand, hand2]
+            expect(Hand.compare_hands(hands)).to eq([hand2])
+        end
+
+        it "return draw hands if draw" do
+            hand.cards[0] = Card.new("2", "H")
+            hand.cards[1] = Card.new("J", "H")
+            hand.cards[2] = Card.new("5", "H")
+            hand.cards[3] = Card.new("A", "H")
+            hand.cards[4] = Card.new("8", "H")
+
+            hand2.cards[0] = Card.new("2", "S")
+            hand2.cards[1] = Card.new("J", "S")
+            hand2.cards[2] = Card.new("5", "S")
+            hand2.cards[3] = Card.new("A", "S")
+            hand2.cards[4] = Card.new("8", "S")
+
+            hand3.cards[0] = Card.new("2", "S")
+            hand3.cards[1] = Card.new("J", "S")
+            hand3.cards[2] = Card.new("5", "S")
+            hand3.cards[3] = Card.new("A", "S")
+            hand3.cards[4] = Card.new("7", "S")
+
+            hands = [hand, hand2]
+            expect(Hand.compare_hands(hands)).to eq([hand, hand2])
+           
+            hands = [hand, hand2, hand3]
+            expect(Hand.compare_hands(hands)).to eq([hand, hand2])
+        end
+    end
 
 end
