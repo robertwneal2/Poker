@@ -53,7 +53,7 @@ class Hand
             val = "three_of_a_kind"
             tie = three_of_a_kind?
         elsif two_pair? != false
-            val = "two pair"
+            val = "two_pair"
             tie = two_pair?
         elsif pair? != false
             val = "pair"
@@ -75,41 +75,108 @@ class Hand
     end
 
     def royal_flush?
-        if straight_flush? && high_card == 14
-            return true
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        if straight_flush? && values.max == 14
+            return [14]
         end
         false
     end
 
     def straight_flush?
-        if straight? && flush?
-            return true
+        if straight? != false && flush? != false
+            return straight?
         end
         false
     end
 
     def four_of_a_kind?
-        false
+        values = []
+        quad = 0
+        sing = 0
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        values.each do |val|
+            if values.count(val) == 4
+                quad = val
+            else
+                sing = val
+            end
+        end
+        return false if quad == 0
+        [quad, sing]
     end
 
     def full_house?
-        false
+        return false if three_of_a_kind? == false
+        trip_val = three_of_a_kind?[0]
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        values.reject! {|val| val == trip_val}
+        return false if values[0] != values[1]
+        [trip_val, values[0]] 
     end
 
     def flush?
-        false
+        suit = @cards[0].suit
+        return false if @cards.any? {|card| card.suit != suit}
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        values.sort!.reverse!
     end
 
     def straight?
-        false
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        values.sort!.reverse!
+        (0...values.length-1).each do |i|
+            return false if values[i] - values[i+1] != 1
+        end
+        [values[0]]
     end
 
     def three_of_a_kind?
-        false
+        trip_val = 0
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        (0...values.length-1).each do |i1|
+            val1 = values[i1]
+            (i1+1..values.length-1).each do |i2|
+                val2 = values[i2]
+                if val1 == val2
+                    (i2+1..values.length-1).each do |i3|
+                        val3 = values[i3]
+                        if val2 == val3
+                            trip_val = val2
+                        end
+                    end
+                end
+            end
+        end
+        return false if trip_val == 0
+        values.reject! {|val| val == trip_val}
+        values.sort!.reverse!
+        values.unshift(trip_val)
+        values
     end
 
     def two_pair?
-        false
+        pair_vals = []
+        values = []
+        @cards.each { |card| values << CARD_VALUES[card.val]}
+        (0...values.length-1).each do |i1|
+            val1 = values[i1]
+            (i1+1..values.length-1).each do |i2|
+                val2 = values[i2]
+                if val1 == val2
+                    pair_vals << val1
+                end
+            end
+        end
+        return false if pair_vals.length < 2
+        pair_vals.sort!.reverse!
+        values.reject! {|val| pair_vals.include?(val)}
+        values = pair_vals + values.sort.reverse
+        values
     end
 
     def pair?

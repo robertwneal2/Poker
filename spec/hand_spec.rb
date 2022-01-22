@@ -50,26 +50,7 @@ describe Hand do
 
     # end
 
-    # describe "#high_card" do
-        
-    #     it "returns value of highest card" do
-    #         hand.cards[0] = Card.new("2", "H")
-    #         hand.cards[1] = Card.new("3", "H")
-    #         hand.cards[2] = Card.new("4", "H")
-    #         hand.cards[3] = Card.new("5", "H")
-    #         hand.cards[4] = Card.new("9", "H")
-    #         expect(hand.high_card).to eq(9)
-    #     end
-
-    # end
-
     describe "#hand_value?" do
-
-        it "call all methods (#royal_flush?, #pair?, etc.) to determine hand value" do
-            expect(hand).to receive(:royal_flush?)
-            expect(hand).to receive(:high_card)
-            hand.hand_value?
-        end
 
         it "returns royal flush rank and highest card value" do
             hand.cards[0] = Card.new("10", "H")
@@ -104,6 +85,7 @@ describe Hand do
             hand.cards[2] = Card.new("10", "C")
             hand.cards[3] = Card.new("J", "D")
             hand.cards[4] = Card.new("J", "H")
+            # debugger
             expect(hand.hand_value?).to eq([6,[10,11]])
         end
 
@@ -125,13 +107,13 @@ describe Hand do
             expect(hand.hand_value?).to eq([4,[9]])
         end
 
-        it "returns three of a kind rank and card values in decending order" do
+        it "returns three of a kind rank, trip card value, and remaining, card values in decending order" do
             hand.cards[0] = Card.new("5", "H")
             hand.cards[1] = Card.new("5", "S")
             hand.cards[2] = Card.new("5", "C")
             hand.cards[3] = Card.new("6", "C")
             hand.cards[4] = Card.new("9", "H")
-            expect(hand.hand_value?).to eq([3,[9,6]])
+            expect(hand.hand_value?).to eq([3,[5,9,6]])
         end
 
         it "returns two pair rank, high pair value, low pair value, then last card" do
@@ -144,11 +126,10 @@ describe Hand do
         end
         it "returns pair rank, pair value, and remaining card's values in decending order" do
             hand.cards[0] = Card.new("7", "H")
-            hand.cards[1] = Card.new("K", "H")
+            hand.cards[1] = Card.new("K", "S")
             hand.cards[2] = Card.new("7", "H")
-            hand.cards[3] = Card.new("10", "H")
+            hand.cards[3] = Card.new("10", "C")
             hand.cards[4] = Card.new("2", "H")
-            # debugger
             expect(hand.hand_value?).to eq([1,[7,13,10,2]])
         end
 
