@@ -80,9 +80,13 @@ class Hand
     end
 
     def remove(indices)
-        indices.each do |index|
-            @cards.delete_at(index)
+        temp_cards = []
+        @cards.each_with_index do |card, index|
+            if !indices.include?(index)
+                temp_cards << card
+            end
         end
+        @cards = temp_cards
         add(indices.length)
     end
 
